@@ -3,9 +3,13 @@
 
 using BluckImport.Core.Interface;
 using BluckImport.Infrastructure;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
+LicenseContext context = LicenseContext.NonCommercial; // Set the LicenseContext
+
+ExcelPackage.LicenseContext = context;
 // Add services to the container.
 
 builder.Services.AddControllers();

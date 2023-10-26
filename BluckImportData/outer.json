@@ -1,0 +1,20 @@
+[
+  {
+    "FirstName": "Suresh",
+    "MiddleName": "Dubey",
+    "LastName": "Dubey",
+    "Age": "23",
+    "DOB": "06-10-2023",
+    "EmailID": "ankushdubey099@gmail.com",
+    "Aderess": "Mumbai"
+  },
+  {
+    "FirstName": "Ramesh",
+    "MiddleName": "Dubey",
+    "LastName": "Dubey",
+    "Age": "23",
+    "DOB": "06-10-2023",
+    "EmailID": "ankushdubey099@gmail.com",
+    "Aderess": "Mumbai"
+  }
+]

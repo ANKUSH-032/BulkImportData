@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BluckImport.Core.Responce
+namespace BluckImport.Core.ClsResponce
 {
     public class Responce
     {

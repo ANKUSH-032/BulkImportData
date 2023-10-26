@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BluckImport.Core.Model
 {
-    public class BulkImport
+    public class BulkImportData
     {
         public IFormFile? ImportFile { get; set; }
     }
@@ -21,6 +21,6 @@ namespace BluckImport.Core.Model
         public string? EmailID { get; set; }
         public string? Aderess { get; set; }
         public string? CreatedBy { get; set; }
-        public string? CreatedOn { get; set; }
+       // public string? CreatedOn { get; set; }
     }
 }

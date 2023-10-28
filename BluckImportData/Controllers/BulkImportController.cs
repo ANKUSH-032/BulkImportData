@@ -19,7 +19,24 @@ namespace BluckImportData.Controllers
         [HttpPost]
         public async Task<IActionResult> InsertBulkData([FromForm] BulkImportData bulkImport)
         {
+
+            string fileName = Path.GetFileName(bulkImport.ImportFile.FileName);
+            string fileExtension = Path.GetExtension(fileName);
+            if (!string.IsNullOrEmpty(fileExtension))
+            {
+                if (fileExtension.ToLower() !=".xlsx")
+                {
+                    return BadRequest(new
+                    {
+                        Status = false,
+                        Message = "Only Accept .xlsx file"
+
+
+                    });
+                }
+            }
             var response = await _bulkImportRepository.Add(bulkImport);
+
             return Ok(response);
         }
     }

@@ -46,9 +46,7 @@ namespace BluckImport.Infrastructure
             using (var package = new ExcelPackage(stream))
             {
                 var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet.
-
                 var data = new DataTable();
-
                 // Assuming the first row contains column headers.
                 foreach (var firstRowCell in worksheet.Cells[1, 1, 1, worksheet.Dimension.End.Column])
                 {
@@ -75,16 +73,6 @@ namespace BluckImport.Infrastructure
                 Console.WriteLine("Data has been converted to JSON and saved to outer.json");
             }
             List<EmpoyeeInsert> personList = JsonConvert.DeserializeObject<List<EmpoyeeInsert>>(json);
-            //DataTable dataTable = new DataTable();
-            //dataTable.Columns.Add("FirstName", typeof(string));
-            //dataTable.Columns.Add("MiddleName", typeof(string));
-            //dataTable.Columns.Add("LastName", typeof(string));
-            //dataTable.Columns.Add("Age", typeof(int));
-            //dataTable.Columns.Add("DOB", typeof(string));
-            //dataTable.Columns.Add("EmailID", typeof(string));
-            //dataTable.Columns.Add("Address", typeof(string));
-
-            //dataTable = Utility.ConvertToDataTable(json);
 
             using (IDbConnection db = connection)
             {
@@ -97,11 +85,14 @@ namespace BluckImport.Infrastructure
                 tvp.Columns.Add("DOB", typeof(DateTime)); // Use DateTime for DOB
                 tvp.Columns.Add("EmailID", typeof(string));
                 tvp.Columns.Add("Address", typeof(string));
-
+                tvp.Columns.Add("RoleID", typeof(string));
+                tvp.Columns.Add("Gender", typeof(string));
+                tvp.Columns.Add("Skill", typeof(string));
                 // Populate the DataTable with data from personList
                 foreach (var person in personList)
                 {
-                    tvp.Rows.Add(person.FirstName, person.MiddleName, person.LastName, person.Age, person.DOB, person.EmailID, person.Aderess);
+
+                    tvp.Rows.Add(person.FirstName, person.MiddleName, person.LastName, person.Age, person.DOB, person.EmailID, person.Aderess, person.RoleID, person.Gender, person.Skill);
                 }
 
                 // Define a dynamic parameter to pass the TVP
@@ -109,10 +100,10 @@ namespace BluckImport.Infrastructure
                 parameters.Add("BluckEmployeeData", tvp.AsTableValuedParameter("BluckEmployeeInsert"));
                 parameters.Add("CreatedBy", "Ankush");
                 // Call the stored procedure
-                var affectedRows = await db.ExecuteAsync("[dbo].[uspEmployeeInsert]", parameters, commandType: CommandType.StoredProcedure);
+                var affectedRows = await db.QueryMultipleAsync("[dbo].[uspEmployeeInsert]", parameters, commandType: CommandType.StoredProcedure);
 
                 // Update response based on the result
-                responce.Message = $"{affectedRows} rows inserted.";
+                responce = affectedRows.Read<Responce>().FirstOrDefault();
             }
 
             return responce;

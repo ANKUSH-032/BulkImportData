@@ -5,8 +5,11 @@
     "LastName": "Dubey",
     "Age": "23",
     "DOB": "06-10-2023",
-    "EmailID": "ankushdubey099@gmail.com",
-    "Aderess": "Mumbai"
+    "EmailID": "ankushdubey098@gmail.com",
+    "Aderess": "Mumbai",
+    "RoleId": "SuperAdmin",
+    "Gender": null,
+    "Skill": null
   },
   {
     "FirstName": "Ramesh",
@@ -14,7 +17,10 @@
     "LastName": "Dubey",
     "Age": "23",
     "DOB": "06-10-2023",
-    "EmailID": "ankushdubey099@gmail.com",
-    "Aderess": "Mumbai"
+    "EmailID": "ankushdubey097@gmail.com",
+    "Aderess": "Mumbai",
+    "RoleId": "Admin",
+    "Gender": null,
+    "Skill": null
   }
 ]

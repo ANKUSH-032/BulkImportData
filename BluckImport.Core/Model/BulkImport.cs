@@ -21,6 +21,9 @@ namespace BluckImport.Core.Model
         public string? EmailID { get; set; }
         public string? Aderess { get; set; }
         public string? CreatedBy { get; set; }
-       // public string? CreatedOn { get; set; }
+        public string RoleID { get; set; }
+        public string Gender { get; set; }
+        public string Skill { get; set; } = string.Empty;
+        // public string? CreatedOn { get; set; }
     }
 }

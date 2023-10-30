@@ -39,7 +39,6 @@ namespace BluckImport.Infrastructure
             string json;
             if (bulkImport.ImportFile == null || bulkImport.ImportFile.Length == 0)
             {
-                // Handle the case where no file is provided.
                 responce.Message = "No file provided";
                 return responce;
             }
@@ -161,10 +160,9 @@ namespace BluckImport.Infrastructure
                                     validationErrors.Add($"Invalid EmailID in row {rowNumber}: {cellValue}");
                                 break;
 
-                            // Add more cases for other column names if needed.
 
                             default:
-                                // Handle unknown column names if necessary.
+                               
                                 break;
                         }
 
@@ -202,7 +200,7 @@ namespace BluckImport.Infrastructure
 
             using (IDbConnection db = connection)
             {
-                // Create a DataTable to match th   e TVP structure
+                // Create a DataTable to match the TVP structure
                 var tvp = new DataTable();
                 tvp.Columns.Add("FirstName", typeof(string));
                 tvp.Columns.Add("MiddleName", typeof(string));

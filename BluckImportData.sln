@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulkImport.Core", "BluckImp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulkImport.Infrastructure", "BluckImport.Infrastructure\BulkImport.Infrastructure.csproj", "{9916A2F9-883C-4D52-81CE-376F11741CA4}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BulkImportDB", "BulkImportDB\BulkImportDB.sqlproj", "{E0485783-CBB1-4171-A380-8C49E88462F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{9916A2F9-883C-4D52-81CE-376F11741CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9916A2F9-883C-4D52-81CE-376F11741CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9916A2F9-883C-4D52-81CE-376F11741CA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0485783-CBB1-4171-A380-8C49E88462F8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

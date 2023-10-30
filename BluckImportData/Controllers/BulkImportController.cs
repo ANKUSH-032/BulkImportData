@@ -45,7 +45,7 @@ namespace BluckImportData.Controllers
                 {
                     Status = false,
                     Message = "Validation Errors",
-                    Errors = response.Errors // Add the error messages here
+                    Errors = response.Errors
                 };
 
                 return BadRequest(errorResponse);
@@ -66,14 +66,12 @@ namespace BluckImportData.Controllers
                     byte[] byteArrayForFileConversion;
                     string fileType = string.Empty, documentName = string.Empty;
                     string exportType = "EXCEL";
-                    switch (exportType) // Replace "EXCEL" with a constant or variable containing your desired case value
+                    switch (exportType) 
                     {
                         case "EXCEL":
                             ExcelPackage.LicenseContext = LicenseContext.Commercial;
                             using (ExcelPackage package = new ExcelPackage(new FileInfo(fileName)))
                             {
-                                //var employeeDataForExecel = (List<EmpoyeeInsertList>)response.Data;
-
                                 await ImportExcel.EmployeeErrorGetExelFIle(dataForExcel, package, fileName).ConfigureAwait(false);
                                 byteArrayForFileConversion = package.GetAsByteArray();
                                 fileType = "application/ms-excel";

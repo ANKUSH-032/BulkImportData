@@ -4,23 +4,27 @@
     "MiddleName": "Dubey",
     "LastName": "Dubey",
     "Age": "23",
-    "DOB": "06-10-2023",
-    "EmailID": "ankushdubey098@gmail.com",
+    "DOB": "10-06-2023",
+    "EmailID": "ankushdubey096@gmail.com",
     "Aderess": "Mumbai",
-    "RoleId": "SuperAdmin",
-    "Gender": null,
-    "Skill": null
+    "RoleID": "SuperAdmin",
+    "Gender": "Male",
+    "Skill": "",
+    "Column1": "",
+    "Column2": ""
   },
   {
     "FirstName": "Ramesh",
     "MiddleName": "Dubey",
     "LastName": "Dubey",
     "Age": "23",
-    "DOB": "06-10-2023",
-    "EmailID": "ankushdubey097@gmail.com",
+    "DOB": "10-06-2023",
+    "EmailID": "ankushdubey095@gmail.com",
     "Aderess": "Mumbai",
-    "RoleId": "Admin",
-    "Gender": null,
-    "Skill": null
+    "RoleID": "Admin",
+    "Gender": "Male",
+    "Skill": "",
+    "Column1": "",
+    "Column2": ""
   }
 ]

@@ -11,6 +11,6 @@ namespace BluckImport.Core.Interface
 {
     public interface IBulkImportRepository
     {
-        Task<Responce> Add(BulkImportData bulkImport);
+        Task<Response<EmpoyeeInsertList>> Add(BulkImportData bulkImport);
     }
 }

@@ -81,6 +81,9 @@ namespace BluckImport.Infrastructure
                         var cellValue = cell.Text;
                         dataRow[cell.Start.Column - 1] = cellValue;
 
+
+                        #region Comment if code 
+
                         // Add validation logic for specific columns.
                         //if (columnName == "FirstName" && !Utility.IsValidFirstName(cellValue))
                         //{
@@ -114,6 +117,8 @@ namespace BluckImport.Infrastructure
                         //{
                         //    validationErrors.Add($"Invalid EmailID in row {rowNumber}: {cellValue}");
                         //}
+                        #endregion
+
                         switch (columnName)
                         {
                             case "FirstName":
@@ -191,8 +196,6 @@ namespace BluckImport.Infrastructure
                 // Convert the DataTable to JSON.
                 json = JsonConvert.SerializeObject(data, Formatting.Indented);
 
-                // Write the JSON to a file.
-                File.WriteAllText("outer.json", json);
                 
             }
             List<EmpoyeeInsert> personList = JsonConvert.DeserializeObject<List<EmpoyeeInsert>>(json);

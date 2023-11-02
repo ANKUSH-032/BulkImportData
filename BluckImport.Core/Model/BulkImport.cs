@@ -41,6 +41,6 @@ namespace BluckImport.Core.Model
         public string? RoleID { get; set; }
         public string? Gender { get; set; }
         public string? Skill { get; set; }
-        // public string? CreatedOn { get; set; }
+         public string? IsDuplicate { get; set; }
     }
 }

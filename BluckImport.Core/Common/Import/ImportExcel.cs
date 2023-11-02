@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BluckImport.Core.Model;
+using System.Drawing;
 
 namespace BulkImport.Core.Common.Import
 {
@@ -30,6 +31,8 @@ namespace BulkImport.Core.Common.Import
             worksheet.Cells[counter, colHeaderCounter++].Value = "Aderess";
             worksheet.Cells[counter, colHeaderCounter++].Value = "RoleID";
             worksheet.Cells[counter, colHeaderCounter++].Value = "Gender";
+            worksheet.Cells[counter, colHeaderCounter++].Value = "Skill";
+            worksheet.Cells[counter, colHeaderCounter++].Value = "IsDuplicate";
 
 
             worksheet.Cells[1, 1, 1, colHeaderCounter + 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
@@ -57,6 +60,23 @@ namespace BulkImport.Core.Common.Import
                 worksheet.Cells[i, colDataCounter++].Value = row.Aderess;
                 worksheet.Cells[i, colDataCounter++].Value = row.RoleID;
                 worksheet.Cells[i, colDataCounter++].Value = row.Gender;
+                worksheet.Cells[i, colDataCounter++].Value = row.Skill;
+                if (row.IsDuplicate.ToLower() == "yes")
+                {
+                    //var cell = worksheet.Cells[i, colDataCounter++];
+                    //cell.Value = row.IsDuplicate;
+                    //cell.Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                    var cell = worksheet.Cells[i, colDataCounter++];
+                    cell.Value = row.IsDuplicate;
+                    cell.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    cell.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red);
+
+                }
+                else
+                {
+                    worksheet.Cells[i, colDataCounter++].Value = row.IsDuplicate;
+                }
 
 
             }

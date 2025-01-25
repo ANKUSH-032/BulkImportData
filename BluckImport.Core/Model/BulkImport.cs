@@ -42,5 +42,10 @@ namespace BluckImport.Core.Model
         public string? Gender { get; set; }
         public string? Skill { get; set; }
          public string? IsDuplicate { get; set; }
+    }   
+    public class InsertQuestion
+    {
+        public string? Question { get; set; }
+        public string? QuestionType { get; set; }
     }
 }

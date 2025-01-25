@@ -120,5 +120,45 @@ namespace BulkImport.Core.Common
                 && !string.IsNullOrWhiteSpace(rowData.RoleID)
                 && !string.IsNullOrWhiteSpace(rowData.Gender);
         }
+
+
+        public static void MapQuestionData(InsertQuestion rowData, string columnName, string cellValue)
+        {
+            // Implement mapping logic from Excel columns to EmpoyeeInsert properties.
+            // Example: 
+            switch (columnName)
+            {
+                case "Question":
+                    rowData.Question = cellValue;
+                    break;
+                case "QuestionType":
+                    rowData.QuestionType = cellValue;
+                    break;
+                //case "LastName":
+                //    rowData.LastName = cellValue;
+                //    break;
+          
+            }
+        }
+
+        public static bool IsValidQuestionRow(InsertQuestion rowData)
+        {
+            // Implement additional row-level validation logic if needed.
+            // Example: return false if required fields are missing.
+            // You can also add more specific validation checks here.
+            return !string.IsNullOrWhiteSpace(rowData.Question)
+                && !string.IsNullOrWhiteSpace(rowData.QuestionType);
+      
+        }
+        public static bool IsValidQuestion(string question)
+        {
+            // Implement your email validation logic here.
+            return Regex.IsMatch(question, @"^.*$");
+        }
+        public static bool IsValidQuestionType(string questionType)
+        {
+            // Implement your email validation logic here.
+            return Regex.IsMatch(questionType, @"^.*$");
+        }
     }
 }

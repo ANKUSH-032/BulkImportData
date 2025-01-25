@@ -43,7 +43,6 @@ namespace BulkImport.Core.Common.Import
                 colorrange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightSteelBlue);
             }
 
-            //Add items(rows)...
 
             int i = counter;
             foreach (var row in data)
@@ -88,5 +87,67 @@ namespace BulkImport.Core.Common.Import
 
             return worksheet;
         }
+        public static async Task<ExcelWorksheet> CreateDynamicExcelFile<T>(
+                                            List<T> data,
+                                            ExcelPackage package,
+                                            string sheetName,
+                                            Dictionary<string, string> columnMappings,
+                                            System.Drawing.Color headerBackgroundColor,
+                                            System.Drawing.Color highlightColor,
+                                            Func<T, bool>? highlightCondition = null, // Optional custom condition for highlighting
+                                            bool pageLayoutView = false)
+        {
+            // Add a new worksheet
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
+
+            int rowCounter = 1; // Start with the first row
+            int colCounter = 1; // Start with the first column
+
+            // Create column headers dynamically based on columnMappings
+            foreach (var header in columnMappings.Values)
+            {
+                worksheet.Cells[rowCounter, colCounter++].Value = header;
+            }
+
+            // Style headers
+            using (var headerRange = worksheet.Cells[rowCounter, 1, rowCounter, columnMappings.Count])
+            {
+                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerRange.Style.Fill.BackgroundColor.SetColor(headerBackgroundColor);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                headerRange.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            }
+
+            // Populate data rows dynamically
+            foreach (var item in data)
+            {
+                rowCounter++;
+                colCounter = 1;
+
+                foreach (var property in columnMappings.Keys)
+                {
+                    var propertyValue = typeof(T).GetProperty(property)?.GetValue(item, null);
+                    worksheet.Cells[rowCounter, colCounter++].Value = propertyValue;
+                }
+
+                // Apply highlighting conditionally
+                if (highlightCondition != null && highlightCondition(item))
+                {
+                    using (var highlightRange = worksheet.Cells[rowCounter, 1, rowCounter, columnMappings.Count])
+                    {
+                        highlightRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        highlightRange.Style.Fill.BackgroundColor.SetColor(highlightColor);
+                    }
+                }
+            }
+
+            // Optional: Set worksheet view
+            worksheet.View.PageLayoutView = pageLayoutView;
+
+            // Return the worksheet for further customization
+            return worksheet;
+        }
+
     }
 }

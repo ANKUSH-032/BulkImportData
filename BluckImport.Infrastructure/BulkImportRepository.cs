@@ -24,7 +24,7 @@ namespace BluckImport.Infrastructure
         public BulkImportRepository(IConfiguration configuration)
         {
             _configuration = configuration;
-            con = _configuration["ConnectionStrings:DataConnect"];
+            con = _configuration["ConnectionStrings:DataConnect"]!;
         }
         public static IDbConnection connection
         {
@@ -44,7 +44,7 @@ namespace BluckImport.Infrastructure
             }
 
             using (var stream = bulkImport.ImportFile.OpenReadStream())
-            using (var package = new ExcelPackage(stream))
+            using (var package = new ExcelPackage(stream))  
             {
                 var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet.
                 var data = new DataTable();
@@ -196,7 +196,7 @@ namespace BluckImport.Infrastructure
 
                 
             }
-            List<EmpoyeeInsert> personList = JsonConvert.DeserializeObject<List<EmpoyeeInsert>>(json);
+            List<EmpoyeeInsert> personList = JsonConvert.DeserializeObject<List<EmpoyeeInsert>>(json)!;
 
             using (IDbConnection db = connection)
             {
@@ -213,7 +213,7 @@ namespace BluckImport.Infrastructure
                 tvp.Columns.Add("Gender", typeof(string));
                 tvp.Columns.Add("Skill", typeof(string));
                 // Populate the DataTable with data from personList
-                foreach (var person in personList)  
+                foreach (var person in personList!)  
                 {
 
                     tvp.Rows.Add(person.FirstName, person.MiddleName, person.LastName, person.Age, person.DOB, person.EmailID, person.Aderess, person.RoleID, person.Gender, person.Skill);
@@ -228,7 +228,7 @@ namespace BluckImport.Infrastructure
 
                 // Update response based on the result
                 
-                Response<EmpoyeeInsertList> response = affectedRows.Read<Response<EmpoyeeInsertList>>().FirstOrDefault();
+                Response<EmpoyeeInsertList> response = affectedRows.Read<Response<EmpoyeeInsertList>>().FirstOrDefault()!;
                 
                 if (response != null && !response.Status)
                 {
@@ -236,6 +236,170 @@ namespace BluckImport.Infrastructure
                     response.Data = data;
                     return response;
                 }
+            }
+
+            return responce;
+        }
+
+        public async Task<Response<InsertQuestion>> AddQuestion(BulkImportData bulkImport)
+        {
+            Response<InsertQuestion> responce = new Response<InsertQuestion>();
+            string json;
+            if (bulkImport.ImportFile == null || bulkImport.ImportFile.Length == 0)
+            {
+                responce.Message = "No file provided";
+                return responce;
+            }
+
+            using (var stream = bulkImport.ImportFile.OpenReadStream())
+            using (var package = new ExcelPackage(stream))
+            {
+                var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet.
+                var data = new DataTable();
+                var validationErrors = new List<string>();
+                // Assuming the first row contains column headers.
+                foreach (var firstRowCell in worksheet.Cells[1, 1, 1, worksheet.Dimension.End.Column])
+                {
+                    data.Columns.Add(firstRowCell.Text);
+                }
+
+                for (var rowNumber = 2; rowNumber <= worksheet.Dimension.End.Row; rowNumber++)
+                {
+                    var worksheetRow = worksheet.Cells[rowNumber, 1, rowNumber, worksheet.Dimension.End.Column];
+                    var dataRow = data.NewRow();
+                    var rowData = new InsertQuestion();
+
+                    for (var col = 1; col <= worksheet.Dimension.End.Column; col++)
+                    {
+                        var cell = worksheet.Cells[rowNumber, col];
+                        var columnName = worksheet.Cells[1, col].Text;
+                        var cellValue = cell.Text;
+                        dataRow[cell.Start.Column - 1] = cellValue;
+
+
+                        #region Comment if code 
+
+                        // Add validation logic for specific columns.
+                        //if (columnName == "FirstName" && !Utility.IsValidFirstName(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid First Name in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "LastName" && !Utility.IsValidLastName(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid LastName in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "Aderess" && !Utility.IsValidAderess(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid Address in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "Gender" && !Utility.IsValidGender(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid Gender in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "RoleId" && !Utility.IsValidRoleId(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid Role Name in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "Age" && !int.TryParse(cellValue, out int age))
+                        //{
+                        //    validationErrors.Add($"Invalid Age in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "DOB" && !DateTime.TryParseExact(cellValue, "MM-dd-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dob))
+                        //{
+                        //    validationErrors.Add($"Invalid DOB in row {rowNumber}: {cellValue}");
+                        //}
+                        //if (columnName == "EmailID" && !Utility.IsValidEmail(cellValue))
+                        //{
+                        //    validationErrors.Add($"Invalid EmailID in row {rowNumber}: {cellValue}");
+                        //}
+                        #endregion
+
+                        switch (columnName)
+                        {
+                            case "Question":
+                                if (!Utility.IsValidQuestion(cellValue))
+                                    validationErrors.Add($"Invalid Question in row {rowNumber}: {cellValue}");
+                                break;
+                            case "QuestionType":
+                                if (!Utility.IsValidQuestionType(cellValue))
+                                    validationErrors.Add($"Invalid Question Type in row {rowNumber}: {cellValue}");
+                                break;
+
+                            default:
+
+                                break;
+                        }
+
+
+                        // Map data to the EmpoyeeInsert object for further use.
+                        Utility.MapQuestionData(rowData, columnName, cellValue);
+                    }
+
+                    // Validate the entire row and add custom validation logic if needed.
+                    if (Utility.IsValidQuestionRow(rowData))
+                    {
+                        data.Rows.Add(dataRow);
+                    }
+                    else
+                    {
+                        validationErrors.Add($"Invalid data in row {rowNumber}");
+                    }
+                }
+                if (validationErrors.Count() > 0)
+                {
+                    var errorResponse = new Response<InsertQuestion>
+                    {
+                        Errors = validationErrors,
+                    };
+
+                    return errorResponse;
+                }
+
+                // Convert the DataTable to JSON.
+                json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+
+            }
+            List<InsertQuestion> questionList = JsonConvert.DeserializeObject<List<InsertQuestion>>(json)!;
+
+            using (IDbConnection db = connection)
+            {
+                // Create a DataTable to match the TVP structure
+                var tvp = new DataTable();
+                tvp.Columns.Add("Question", typeof(string));
+                tvp.Columns.Add("QuestionType", typeof(string));
+   
+                // Populate the DataTable with data from personList
+                foreach (var question in questionList!)
+                {
+
+                    tvp.Rows.Add(question.Question, question.QuestionType);
+                }
+
+                // Define a dynamic parameter to pass the TVP
+                var parameters = new DynamicParameters();
+                parameters.Add("BulkQuestionData", tvp.AsTableValuedParameter("bulkQuestionInsert"));
+                parameters.Add("CreatedBy", "Ankush");
+                // Call the stored procedure
+                var affectedRows = await db.QueryMultipleAsync("[dbo].[uspQuestionInsert]", parameters, commandType: CommandType.StoredProcedure);
+
+                // Update response based on the result
+
+                Response<InsertQuestion> response = affectedRows.Read<Response<InsertQuestion>>().FirstOrDefault()!;
+
+                if (response != null && !response.Status)
+                {
+                    var data = affectedRows.Read<InsertQuestion>().ToList();
+                    response.Data = data;
+                    return response;
+                }
+                else
+                {
+                    response!.Status = true;
+                    response.Message = "Insert Successfully";
+                    return response;
+                }
+               
             }
 
             return responce;
@@ -256,7 +420,7 @@ namespace BluckImport.Infrastructure
                     var values = new object[properties.Length];
                     for (int i = 0; i < properties.Length; i++)
                     {
-                        values[i] = properties[i].GetValue(item, null);
+                        values[i] = properties[i].GetValue(item, null)!;
                     }
                     dt.Rows.Add(values);
                 }
